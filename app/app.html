@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WP Express</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="assets/css/select2.css">
+    <link rel="stylesheet" href="assets/css/select2-bootstrap.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+  </head>
+  <body>
+    <div id="drag-overlay">
+      <div class="drop-prompt">
+        <h2><i class="fa fa-folder-open-o"></i> Drop to select folder</h2>
+      </div>
+    </div>
+
+    <div id="loading-overlay">
+      <div class="loader">
+        <svg width="152px" height="152px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="uil-ring-alt">
+          <rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect>
+          <circle id="loading-track" cx="50" cy="50" r="40" stroke="#eeeeee" fill="none" stroke-width="12" stroke-linecap="round"></circle>
+          <circle id="loading-worm" cx="50" cy="50" r="40" stroke="#36c1fe" fill="none" stroke-width="12" stroke-linecap="round">
+            <animate attributeName="stroke-dashoffset" dur="1.75s" repeatCount="indefinite" from="502" to="0"></animate><animate attributeName="stroke-dasharray" dur="1.75s" repeatCount="indefinite" values="188.25 62.75;1 250;188.25 62.75"></animate>
+          </circle>
+        </svg>
+
+        <i id="loading-download" class="fa fa-download loading-status-icon"></i>
+        <i id="loading-database" class="fa fa-database loading-status-icon"></i>
+        <i id="loading-wordpress" class="fa fa-wordpress loading-status-icon"></i>
+        <i id="loading-language" class="fa fa-language loading-status-icon"></i>
+        <i id="loading-plugins" class="fa fa-plug loading-status-icon"></i>
+        <i id="loading-themes" class="fa fa-paint-brush loading-status-icon"></i>
+        <i id="loading-complete" class="fa fa-check loading-status-icon"></i>
+        <i id="loading-error" class="fa fa-exclamation loading-status-icon"></i>
+
+        <h4 id="status">Loading...</h4>
+
+        <div id="post-install-actions-wrapper" class="post-install-actions">
+          <a id="open-new-site-browser" class="btn btn-default"><i class="fa fa-link"></i> View Website in Browser</a>
+          <a id="open-new-site-folder" class="btn btn-default"><i class="fa fa-folder-open"></i> Open Install Folder</a>
+          <br>
+          <a id="open-new-install" class="btn btn-link" href="progress-step-0">Install another WordPress site</a>
+        </div>
+
+        <div id="error-actions-wrapper" class="post-install-actions">
+          <a id="send-error-report" class="btn btn-default"><i class="fa fa-bug"></i> Send Error Report</a>
+          <br>
+          <a id="restart-install" class="btn btn-link" href="progress-step-0">Install another WordPress site</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="appView" class="main">
+      <div class="container-fluid">
+        <!-- http://codepen.io/bronsrobin/pen/dKqcf -->
+        <div class="progress-wrapper with-bundles">
+          <div id="progress">
+            <div id="progress-step-0" class="step" v-bind:class="{ 'active': currentStep == 0, 'complete': currentStep > 0 }" data-desc="Install Location">
+              <i v-show="currentStep > 0" class="fa fa-check"></i>
+              <i v-else class="fa fa-folder"></i>
+            </div>
+            <div id="progress-step-1" class="step" v-bind:class="{ 'active': currentStep == 1, 'complete': currentStep > 1 }" data-desc="Database">
+              <i v-show="currentStep > 1" class="fa fa-check"></i>
+              <i v-else class="fa fa-database"></i>
+            </div>
+            <div id="progress-step-2" class="step" v-bind:class="{ 'active': currentStep == 2, 'complete': currentStep > 2 }" data-desc="WordPress">
+              <i v-show="currentStep > 2" class="fa fa-check"></i>
+              <i v-else class="fa fa-wordpress"></i>
+            </div>
+            <div id="progress-step-3" class="step" v-bind:class="{ 'active': currentStep == 3, 'complete': currentStep > 3 }" data-desc="Bundles">
+              <i v-show="currentStep > 3" class="fa fa-check"></i>
+              <i v-else class="fa fa-cubes"></i>
+            </div>
+          </div>
+        </div>
+
+        <div id="notify-wrapper" class="alert alert-info alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <div id="notify"></div>
+        </div>
+
+        <div class="step-slide-wrapper">
+
+          <!-- STEP: Directory Select -->
+          <div class="step-slide" v-show="currentStep == 0">
+            <div id="step-directory-alert" class="alert alert-danger section-alert" role="alert" style="display:none;"></div>
+
+            <div id="selected-directory-wrapper" class="step-current-settings text-center">
+              <p>Currently selected directory:</p>
+              <h4><i class="fa fa-folder-open"></i> <span id="selected-directory"></span></h4>
+              <p><a id="continue-directory-trigger" href="#" class="btn btn-default btn-sm">Use this folder</a></p>
+            </div>
+
+            <div class="drop-instructions text-center">
+              <p class="text-muted">Select where you would like WordPress installed:</p>
+
+              <h3>Drop the folder here</h3>
+
+              <p>or</p>
+
+              <button id="select-directory-trigger" class="btn btn-primary">Select Folder</button>
+            </div>
+          </div>
+          <!-- END STEP: Directory Select -->
+
+          <!-- STEP: Database Setup -->
+          <div class="step-slide" v-show="currentStep == 1">
+            <div id="selected-database-wrapper" class="step-current-settings text-center">
+              <p>Connected to:</p>
+              <h4><span id="selected-database"></span></h4>
+
+              <p><a id="change-database-details" href="#progress-step-1" class="btn btn-default btn-sm"><i class="fa fa-edit"></i> Edit database connection details</a></p>
+            </div>
+
+            <div id="step-database-alert" class="alert alert-danger section-alert" role="alert" style="display:none;"></div>
+
+            <form id="step-database-form" class="step-form">
+              <div id="database-connect-fields-wrapper">
+                <p class="text-center">Enter the information you use to connect to your database:</p>
+
+                <br>
+
+                <div class="row">
+                  <div class="col-xs-6">
+                    <div class="form-group">
+                      <label for="username">Username</label>
+                      <input id="username" name="username" class="form-control initial-focus">
+                    </div>
+                  </div>
+                  <div class="col-xs-6">
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <input id="password" type="password" name="password" class="form-control">
+                    </div>
+                  </div>
+                </div>
+
+                <div id="db-hostname-connect" class="row">
+                  <div class="col-xs-6">
+                    <div class="form-group">
+                      <label for="hostname">Hostname</label>
+                      <input id="hostname" name="hostname" class="form-control" placeholder="127.0.0.1">
+                    </div>
+                  </div>
+                  <div class="col-xs-6">
+                    <div class="form-group">
+                      <label for="port">Port Number</label>
+                      <input id="port" name="port" class="form-control" placeholder="3306">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="database-after-connect">
+                <div class="form-group">
+                  <label for="database">Database</label>
+                  <input id="database" name="database" class="form-control">
+                </div>
+
+                <p>
+                  <a id="advanced-database-toggle" class="section-toggle" href="#advanced-database">
+                    <i class="fa fa-plus"></i> Additional Settings
+                  </a>
+                </p>
+
+                <div id="advanced-database" class="section-toggle-content">
+                  <div id="advanced-database-charset-fields">
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <label for="charset">Character Set</label>
+                          <input id="charset" name="charset" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <label for="collation">Collation</label>
+                          <input id="collation" name="collation" class="form-control">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label for="table_prefix">Table Prefix</label>
+                        <input id="table_prefix" name="table_prefix" class="form-control" placeholder="wp_">
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <button id="setup-database" class="btn btn-primary">Test Connection</button>
+                <br>
+                <a class="btn btn-link step-back" href="#progress-step-0" data-step-target="0">Back to install folder</a>
+              </div>
+
+            </form>
+          </div>
+          <!-- END STEP: Database Setup -->
+
+          <!-- STEP: WordPress Setup -->
+          <div class="step-slide" v-show="currentStep == 2">
+            <div id="step-wordpress-alert" class="alert alert-danger section-alert" role="alert" style="display:none;"></div>
+
+            <form id="step-wordpress-form" class="step-form">
+              <div class="form-group">
+                <label for="title">Site Title</label>
+                <input id="title" name="title" class="form-control initial-focus" placeholder="My WordPress Site">
+              </div>
+
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label for="url">URL</label>
+                    <input id="url" name="url" class="form-control" placeholder="e.g. http://mysite.com">
+                  </div>
+                </div>
+
+                <div class="col-xs-6">
+                   <div class="form-group">
+                    <label for="admin_email">Admin Email</label>
+                    <input id="admin_email" type="email" name="admin_email" class="form-control" placeholder="e.g. admin@mysite.com">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label for="admin_username">Admin Username</label>
+                    <input id="admin_username" name="admin_username" class="form-control">
+                  </div>
+                </div>
+
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label for="admin_password">Admin Password</label>
+                    <input id="admin_password" type="password" name="admin_password" class="form-control">
+                  </div>
+                </div>
+              </div>
+
+              <p>
+                <a id="advanced-wp-toggle" class="section-toggle" href="#advancedWP">
+                  <i class="fa fa-plus"></i> Additional Settings
+                </a>
+              </p>
+
+              <div id="advancedWP" class="section-toggle-content">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="form-group">
+                      <label for="language">Language</label>
+                      <input id="language" name="language" class="form-control" placeholder="Loading languages&hellip;" disabled>
+                    </div>
+                  </div>
+                  <div class="col-xs-6">
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <button id="select-bundles" class="btn btn-primary">Select Bundles</button>
+                <br>
+                <a class="btn btn-link step-back" href="#progress-step-1" data-step-target="1">Back to database details</a>
+              </div>
+            </form>
+          </div>
+          <!-- END STEP: WordPress Setup -->
+
+          <!-- STEP: Bundles Select -->
+          <div class="step-slide" v-show="currentStep == 3">
+            <div id="step-bundles-alert" class="alert alert-danger section-alert" role="alert" style="display:none;"></div>
+
+            <form id="step-bundles-form" class="step-form">
+
+              <div id="themeDropTarget" class="panel panel-default">
+                <div class="panel-heading">
+                  <span class="panel-title"><i class="fa fa-paint-brush"></i> Themes</span>
+                  <button type="button" class="btn btn-default btn-xs pull-right" data-toggle="modal" data-target="#addThemeModal"><i class="fa fa-plus"></i> Add Theme</button>
+                </div>
+
+                <table class="table table-hover table-bundles" v-show="themes.length > 0">
+                  <tbody>
+                    <tr class="theme" v-for="(index, theme) in themes" id="theme-item-{{ $index }}" data-index="{{ $index }}" transition="slide" enter-stagger="150" v-bind:style="{ zIndex: plugins.length - index }">
+                      <td class="col-name" data-toggle="tooltip" data-placement="top" title="{{ theme.tooltip }}"><label for="theme-{{ index }}"><i class="fa fa-{{ theme.type }}"></i> {{{ theme.name }}}</label></td>
+                      <td class="col-activate" data-toggle="tooltip" data-placement="top" title="Activate theme after install"><input id="activate-theme-{{ index }}" type="radio" name="activeTheme" value="{{ index }}" v-bind:checked="theme.active" v-on:mousedown="setActiveTheme(index, $event)" v-on:change="toggleThemeActive(index, $event)"></td>
+                      <td class="col-remove" v-on:click.stop="removeTheme(index)"><i class="fa fa-times"></i></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="panel-body" v-show="themes.length == 0">
+                  <p class="text-none-selected">No themes selected</p>
+                </div>
+
+              </div>
+
+              <div id="pluginDropTarget" class="panel panel-default">
+                <div class="panel-heading">
+                  <span class="panel-title"><i class="fa fa-plug"></i> Plugins</span>
+                  <button type="button" class="btn btn-default btn-xs pull-right" data-toggle="modal" data-target="#addPluginModal"><i class="fa fa-plus"></i> Add Plugin</button>
+                </div>
+
+                <table class="table table-hover table-bundles" v-show="plugins.length > 0">
+                  <tbody>
+                    <tr class="plugin" v-for="(index, plugin) in plugins" id="plugin-item-{{ $index }}" data-index="{{ $index }}" transition="slide" enter-stagger="150" v-bind:style="{ zIndex: plugins.length - index }">
+                      <td class="col-name" data-toggle="tooltip" data-placement="top" title="{{ plugin.tooltip }}"><label for="plugin-{{ index }}"><i class="fa fa-{{ plugin.type }}"></i> {{{ plugin.name }}}</label></td>
+                      <td class="col-activate" data-toggle="tooltip" data-placement="top" title="Activate plugin after install"><input id="activate-plugin-{{ index }}" type="checkbox" name="activePlugin" value="{{ index }}" v-bind:checked="plugin.active" v-on:change="togglePluginActive(index, $event)"></td>
+                      <td class="col-remove" v-on:click.stop="removePlugin(index)"><i class="fa fa-times"></i></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="panel-body" v-show="plugins.length == 0">
+                  <p class="text-none-selected">No plugins selected</p>
+                </div>
+
+              </div>
+
+              <div class="text-center">
+                <button id="save-bundle-begin-install" class="btn btn-primary" v-show="plugins.length || themes.length">Save Bundle &amp; Install WordPress</button>
+                <button id="bundle-begin-install" class="btn" v-bind:class="{ 'btn-default': plugins.length || themes.length, 'btn-primary': !(plugins.length || themes.length) }">Install WordPress</button>
+                <br>
+                <a class="btn btn-link step-back" href="#progress-step-2" data-step-target="2">Back to WordPress settings</a>
+              </div>
+            </form>
+          </div>
+          <!-- END STEP: Bundles Select -->
+
+        </div> <!-- /.step-slide-wrapper -->
+
+      </div> <!-- /.container-fluid -->
+
+      <div id="defaultsModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Default Settings</h4>
+            </div>
+            <div class="modal-body">
+              <div id="settings-defaults-success" class="alert alert-success text-center" role="alert" style="display:none;"></div>
+              <div id="settings-defaults-alert" class="alert alert-danger text-center" role="alert" style="display:none;"></div>
+
+              <ul class="nav nav-pills" role="tablist">
+                <li role="presentation" class="active"><a href="#defaultSettingsDatabase" aria-controls="default-settings-database" role="tab" data-toggle="pill"><i class="fa fa-database"></i> Database</a></li>
+                <li role="presentation"><a href="#defaultSettingsWordPress" aria-controls="default-settings-wordpress" role="tab" data-toggle="pill"><i class="fa fa-wordpress"></i> WordPress</a></li>
+              </ul>
+
+              <hr>
+
+              <div class="tab-content">
+                
+                <div role="tabpanel" class="tab-pane fade in active" id="defaultSettingsDatabase">
+                  <p>Default database credentials to use for installs</p>
+
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label for="defaultDBUser">Database Username</label>
+                        <input id="defaultDBUser" name="defaultDBUser" class="form-control initial-focus">
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label for="defaultDBPass">Database Password</label>
+                        <input id="defaultDBPass" name="defaultDBPass" type="password" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label for="defaultDBHost">Database Hostname</label>
+                        <input id="defaultDBHost" name="defaultDBHost" class="form-control" placeholder="127.0.0.1">
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label for="defaultDBPort">Database Port</label>
+                        <input id="defaultDBPort" name="defaultDBPort" class="form-control" placeholder="3306">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="defaultSettingsWordPress">
+                  <p>Default WordPress admin credentials to use for installs</p>
+
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label for="defaultWPUser">Admin Username</label>
+                        <input id="defaultWPUser" name="defaultWPUser" class="form-control initial-focus">
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label for="defaultWPPass">Admin Password</label>
+                        <input id="defaultWPPass" name="defaultWPPass" type="password" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <div class="form-group">
+                        <label for="defaultWPEmail">Admin Email</label>
+                        <input id="defaultWPEmail" name="defaultWPEmail" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button id="saveDefaultsSettings" type="button" class="btn btn-primary">Save Changes</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <div id="advancedModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Advanced Settings</h4>
+            </div>
+            <div class="modal-body">
+              <div id="settings-advanced-success" class="alert alert-success text-center" role="alert" style="display:none;"></div>
+              <div id="settings-advanced-alert" class="alert alert-danger text-center" role="alert" style="display:none;"></div>
+
+              <div id="phpBinaryPathWrapper" class="form-group">
+                <label for="phpBinaryPath">PHP Binary</label>
+                <div class="input-group">
+                  <input id="phpBinaryPath" name="phpBinaryPath" class="form-control initial-focus" aria-describedby="phpBinaryDesc">
+                  <div class="input-group-addon"><a id="phpBinaryPathSelect" href="#"><i class="fa fa-file"></i></a></div>
+                </div>
+                <span id="phpBinaryDesc" class="help-block">Custom PHP binary to use</span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button id="saveAdvancedSettings" type="button" class="btn btn-primary">Save Changes</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <div id="aboutModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body text-center">
+              <p><img src="assets/images/logo.png"></p>
+
+              <p id="currentVersion"></p>
+
+              <p class="text-muted"><small>Copyright &copy; <script>var year = new Date().getFullYear(); document.write(year);</script> ractoon, Inc.</small></p>
+
+              <br>
+
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <div id="addThemeModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title"><i class="fa fa-paint-brush"></i> Add Theme</h4>
+            </div>
+            <div class="modal-body">
+              
+              <ul class="nav nav-pills" role="tablist">
+                <li role="presentation" class="active"><a href="#themeWPOrgDir" aria-controls="theme-wp-org-dir" role="tab" data-toggle="pill"><i class="fa fa-wordpress"></i> WordPress Directory</a></li>
+                <li role="presentation"><a href="#themeURL" aria-controls="theme-url" role="tab" data-toggle="pill"><i class="fa fa-link"></i> URL</a></li>
+                <li role="presentation"><a href="#themeLocal" aria-controls="theme-local" role="tab" data-toggle="pill"><i class="fa fa-file-zip-o"></i> Local Zip Files</a></li>
+              </ul>
+
+              <hr>
+
+              <div class="tab-content">
+                
+                <div role="tabpanel" class="tab-pane fade in active" id="themeWPOrgDir">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <div class="form-group">
+                        <input class="form-control input-lg initial-focus" id="themeDirectorySearch" placeholder="Search WordPress Themes Directory">
+                        <span id="themeDirectorySearchHelpBlock" class="help-block text-center"></span>
+                      </div>
+
+                      <div v-if="loadingWPThemes" class="text-center">
+                        <svg width="75px" height="75px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="uil-ring-alt">
+                          <rect x="0" y="0" width="75" height="75" fill="none" class="bk"></rect>
+                          <circle id="loading-track" cx="50" cy="50" r="40" stroke="#eeeeee" fill="none" stroke-width="10" stroke-linecap="round"></circle>
+                          <circle id="loading-worm" cx="50" cy="50" r="40" stroke="#36c1fe" fill="none" stroke-width="10" stroke-linecap="round">
+                            <animate attributeName="stroke-dashoffset" dur="1.75s" repeatCount="indefinite" from="502" to="0"></animate><animate attributeName="stroke-dasharray" dur="1.75s" repeatCount="indefinite" values="188.25 62.75;1 250;188.25 62.75"></animate>
+                          </circle>
+                        </svg>
+                      </div>
+                      <div v-else>
+                        <div v-if="wpthemes.length > 0" class="list-group">
+                          <div class="list-group-item" v-for="(index, theme) in wpthemes">
+                            <div class="row" data-toggle="tooltip" data-placement="top" title="{{ theme.short_description }}">
+                              <div class="col-xs-10">
+                                <strong>{{{ theme.name }}}</strong> <small v-if="theme.author !== undefined && theme.author.length">by {{{ theme.author }}}</small>
+                              </div>
+                              <div class="col-xs-2">
+                                <button type="button" class="btn btn-default btn-xs pull-right" v-on:click.stop="addWPTheme(theme.name, theme.slug)"><i class="fa fa-plus"></i> Add Theme</button> 
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="themeURL">
+                  <div class="row">
+                    <div class="col-xs-12 text-center">
+                      <form id="themeURLForm" v-on:submit.prevent="submitThemeURLField">
+                        <div class="form-group">
+                          <input class="form-control input-lg initial-focus" id="themeURLField" placeholder="e.g. https://github.com/user/my-theme/archive/master.zip">
+                          <span id="themeURLHelpBlock" class="help-block">URL for theme zip file</span>
+                        </div>
+
+                        <button id="addSelectedThemeURL" type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Add Theme</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              
+                <div role="tabpanel" class="tab-pane fade text-center" id="themeLocal">
+                  <button id="selectThemeTrigger" class="btn btn-default btn-lg" v-on:click.stop="addFileTheme"><i class="fa fa-files-o"></i> Select Theme Zip Files</button>
+                </div>
+              
+              </div>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <div id="addPluginModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title"><i class="fa fa-plug"></i> Add Plugin</h4>
+            </div>
+            <div class="modal-body">
+              
+              <ul class="nav nav-pills" role="tablist">
+                <li role="presentation" class="active"><a href="#pluginWPOrgDir" aria-controls="plugin-wp-org-dir" role="tab" data-toggle="pill"><i class="fa fa-wordpress"></i> WordPress Directory</a></li>
+                <li role="presentation"><a href="#pluginURL" aria-controls="plugin-url" role="tab" data-toggle="pill"><i class="fa fa-link"></i> URL</a></li>
+                <li role="presentation"><a href="#pluginLocal" aria-controls="plugin-local" role="tab" data-toggle="pill"><i class="fa fa-file-zip-o"></i> Local Zip Files</a></li>
+              </ul>
+
+              <hr>
+
+              <div class="tab-content">
+                
+                <div role="tabpanel" class="tab-pane fade in active" id="pluginWPOrgDir">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <div class="form-group">
+                        <input class="form-control input-lg initial-focus" id="pluginDirectorySearch" placeholder="Search WordPress Plugins Directory">
+                        <span id="pluginDirectorySearchHelpBlock" class="help-block text-center"></span>
+                      </div>
+
+                      <div v-if="loadingWPPlugins" class="text-center">
+                        <svg width="75px" height="75px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="uil-ring-alt">
+                          <rect x="0" y="0" width="75" height="75" fill="none" class="bk"></rect>
+                          <circle id="loading-track" cx="50" cy="50" r="40" stroke="#eeeeee" fill="none" stroke-width="10" stroke-linecap="round"></circle>
+                          <circle id="loading-worm" cx="50" cy="50" r="40" stroke="#36c1fe" fill="none" stroke-width="10" stroke-linecap="round">
+                            <animate attributeName="stroke-dashoffset" dur="1.75s" repeatCount="indefinite" from="502" to="0"></animate><animate attributeName="stroke-dasharray" dur="1.75s" repeatCount="indefinite" values="188.25 62.75;1 250;188.25 62.75"></animate>
+                          </circle>
+                        </svg>
+                      </div>
+                      <div v-else>
+                        <div v-if="wpplugins.length > 0" class="list-group">
+                          <div class="list-group-item" v-for="(index, plugin) in wpplugins">
+                            <div class="row" data-toggle="tooltip" data-placement="top" title="{{ plugin.short_description }}">
+                              <div class="col-xs-10">
+                                <strong>{{{ plugin.name }}}</strong> <small v-if="plugin.author !== undefined && plugin.author.length">by {{{ plugin.author }}}</small>
+                              </div>
+                              <div class="col-xs-2">
+                                <button type="button" class="btn btn-default btn-xs pull-right" v-on:click.stop="addWPPlugin(plugin.name, plugin.slug)"><i class="fa fa-plus"></i> Add Plugin</button> 
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="pluginURL">
+                  <div class="row">
+                    <div class="col-xs-12 text-center">
+                      <form id="pluginURLForm" v-on:submit.prevent="submitPluginURLField">
+                        <div class="form-group">
+                          <input class="form-control input-lg initial-focus" id="pluginURLField" placeholder="e.g. https://github.com/user/my-plugin/archive/master.zip">
+                          <span id="pluginURLHelpBlock" class="help-block">URL for plugin zip file</span>
+                        </div>
+
+                        <button id="addSelectedPluginURL" type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Add Plugin</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              
+                <div role="tabpanel" class="tab-pane fade text-center" id="pluginLocal">
+                  <button id="selectPluginTrigger" class="btn btn-default btn-lg" v-on:click.stop="addFilePlugin"><i class="fa fa-files-o"></i> Select Plugin Zip Files</button>
+                </div>
+              
+              </div>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+    </div>  <!-- /.main -->
+
+    <script>
+    window.$ = window.jQuery = require('jquery');
+    var Vue = require('vue');
+    </script>
+
+    <script src="assets/js/libs/bootstrap.min.js"></script>
+    <script src="assets/js/libs/select2.js"></script>
+
+    <script src="vendor/electron_boilerplate/env_config.js"></script>
+    <script src="assets/js/wpe-settings.js"></script>
+    <script src="app.js"></script>
+    <script src="assets/js/libs/menu.js"></script>
+
+  </body>
+</html>

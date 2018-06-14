@@ -1,0 +1,4 @@
+dist
+node_modules
+app/bin/win32/*
+app/bin/osx/*

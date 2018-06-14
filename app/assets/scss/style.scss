@@ -1,0 +1,520 @@
+// Bootstrap
+@import "bootstrap";
+
+// Font Awesome
+@import "font-awesome/font-awesome";
+
+// Sass variables
+@import "partials/variables";
+
+// Sass mixins
+@import "partials/mixins";
+
+
+/*********************
+LAYOUT
+*********************/
+
+body {
+  overflow-x: hidden;
+}
+
+.step-slide-wrapper {
+  position: relative;
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+#projects {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 220px;
+	border-right: 1px solid #ddd;
+	padding: 20px 0;
+}
+
+.add-project {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	display: block;
+	padding: 10px;
+	text-align: center;
+	width: 100%;
+}
+
+.vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.btn-primary {
+  background-color: $wp-blue;
+  background: linear-gradient(to bottom, #36c1fe 0%,#237ba3 100%);
+  border: none;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+
+  &:hover {
+    background-color: $wp-blue;
+    background: linear-gradient(to bottom, darken(#36c1fe, 10%) 0%, darken(#237ba3, 10%) 100%);
+  }
+}
+
+.step-slide {
+  .btn-primary {
+    font-size: 1.125em;
+    padding: 0.5em 1.5em;
+  }
+}
+
+.btn-link {
+  color: #777;
+}
+
+.step-back {
+  margin-top: 8px;
+}
+
+.section-alert {
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
+}
+
+.section-alert.alert-danger {
+  background: linear-gradient(to bottom, #FD3434 0%, #962121 100%);
+  color: $white;
+  border: none;
+  border-radius: 0;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.text-none-selected {
+  color: #999;
+  margin: 0;
+  text-align: center;
+}
+
+/*********************
+GENERAL
+*********************/
+
+// Dropzone section
+#dropzone {
+	border: 5px dashed #ddd;
+	padding: 2em;
+}
+
+#drag-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  text-align: center;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.drop-prompt {
+  padding: 0;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.9);
+}
+
+.drop-instructions {
+  border: 10px dashed #eee;
+  margin: 20px;
+  padding: 4.25em 0;
+}
+
+// Loading overlay
+#loading-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background: #fff;
+	text-align: center;
+	z-index: 60;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .loader {
+    position: relative;
+    padding-bottom: 4em;
+  }
+
+	#status {
+		padding: 0;
+		text-align: center;
+    width: 600px;
+	}
+
+	svg {
+		margin: 0 auto;
+	}
+
+  .loading-status-icon {
+    position: absolute;
+    color: #36c1fe;
+    display: none;
+    top: 49px;
+    left: 50%;
+    font-size: 52px;
+    transform: translate(-50%, 0);
+  }
+
+  #loading-download {
+    font-size: 58px;
+  }
+
+  #loading-complete {
+    top: 43px;
+    color: darken(#45d62f, 10%);
+    font-size: 64px;
+  }
+
+  .done {
+    #loading-track {
+      stroke: darken(#45d62f, 10%);
+    }
+
+    #loading-worm {
+      stroke-opacity: 0;
+    }
+  }
+
+  #loading-error {
+    top: 43px;
+    color: #b22c2c;
+    font-size: 72px;
+  }
+
+  .error {
+    #loading-track {
+      stroke: #b22c2c;
+    }
+
+    #loading-worm {
+      stroke-opacity: 0;
+    }
+  }
+
+  .post-install-actions {
+    display: none;
+    margin: 1em 0 0;
+    text-align: center;
+    width: 600px;
+
+    .btn {
+      cursor: pointer;
+      margin: 0 8px 8px;
+    }
+  }
+
+}
+
+.step-form,
+.notify-wrapper {
+  margin: 0 auto;
+  padding: 30px 0 0;
+  max-width: 580px;
+}
+
+.has-feedback label ~ .form-control-feedback {
+  top: 34px;
+}
+
+.step-current-settings {
+  background: $wp-blue;
+  background: linear-gradient(to bottom,  #36c1fe 0%,#237ba3 90%);
+  border-bottom: 1px solid darken(#237ba3, 10%);
+  color: #fff;
+  display: none;
+  padding: 30px 0;
+
+  .light {
+    color: lighten($wp-blue, 50%);
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.select2-results {
+  max-height: 125px;
+}
+
+#licenseInfo {
+  margin-top: 16px;
+}
+
+/*********************
+PROGRESS NAV
+*********************/
+
+.progress-wrapper {
+  background: linear-gradient(to bottom, #f9f9f9 0%,#f2f2f2 100%);
+  border-bottom: 1px solid #f1f1f1;
+}
+
+#progress {
+  width: 405px;
+  margin: 0 auto;
+  padding: 20px 0;
+
+  .step {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(to bottom,  #fff 0%,#f2f2f2 100%);
+    display: inline-block;
+    border-radius: 50%;
+    color: $grey;
+    font-size: 22px;
+    padding: 4px;
+    text-align: center;
+    line-height: 36px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.125);
+  }
+
+  .step:first-child {
+    line-height: 44px;
+    transform: translate(0, 4px);
+  }
+
+  #progress-step-2 {
+    font-size: 24px;
+  }
+
+  .step:nth-child(n+2) {
+    margin: 0 0 0 125px;
+    transform: translate(0, -4px);
+  }
+
+  .step:nth-child(n+2):before {
+    width: 100px;
+    height: 3px;
+    display: block;
+    background-color: $white;
+    transform: translate(-120px, 18px);
+    content: '';
+  }
+
+  .step:after {
+    width: 150px;
+    display: block;
+    transform: translate(-55px, 3px);
+    color: $grey;
+    content: attr(data-desc);
+    font-weight: 400;
+    font-size: 14px;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  .step:first-child:after {
+    transform: translate(-55px, -5px);
+  }
+
+  .step.active {
+    background: linear-gradient(to bottom,  #36c1fe 0%,#237ba3 100%);
+    color: $white;
+  }
+
+  .step.active:before {
+    background: linear-gradient(to right, #45d62f 0%, #36c1fe 100%);
+  }
+
+  .step.active:after {
+    color: #237ba3;
+  }
+
+  .step.complete {
+    background: linear-gradient(to bottom, #45d62f 0%, #2b871d 100%);
+    color: $white;
+  }
+
+  .step.complete:before {
+    background-color: #45d62f;
+  }
+
+  .step.complete:first-child {
+    font-size: 22px;
+  }
+}
+
+.with-bundles {
+  #progress {
+    width: 580px;
+  }
+}
+
+.panel-default {
+  border-color: #f1f1f1;
+
+  .panel-heading {
+    background: linear-gradient(to bottom, #f9f9f9 0%,#f2f2f2 100%);
+    color: $grey;
+    padding: 10px 8px;
+  }
+
+  .panel-title {
+    font-size: 1em;
+    font-weight: bold;
+
+    i {
+      margin: 0 0.25em 0 0;
+    }
+  }
+
+  .panel-footer {
+    background: linear-gradient(to bottom, #f2f2f2 0%,#f9f9f9 100%);
+    padding: 8px;
+  }
+}
+
+.table-bundles {
+  tbody {
+    tr {
+      position: relative;
+
+      &:hover {
+        background-color: #f1f1f1;
+      }
+
+      td {
+        position: relative;
+        border-color: #f1f1f1;
+        line-height: 1;
+        padding: 0;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  label {
+    display: block;
+    font-weight: normal;
+    padding: 8px;
+  }
+}
+
+.col-name {
+  i {
+    float: left;
+    margin: 0 0.75em 0 0;
+  }
+}
+
+.col-activate {
+  text-align: center;
+  width: 4em;
+}
+
+.col-remove {
+  color: #999;
+  text-align: center;
+  width: 3em;
+
+  &:hover {
+    cursor: pointer;
+    color: #b22c2c;
+  }
+}
+
+/*********************
+VUE
+*********************/
+
+.slide-transition {
+  transition: all 0.25s ease;
+  max-height: 200px;
+  opacity: 1;
+  overflow: hidden;
+  transform: translate(0, 0);
+}
+
+.slide-enter, 
+.slide-leave {
+  max-height: 0;
+  opacity: 0;
+  transform: translate(50px, 0);
+}
+
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
+/*********************
+MODAL
+*********************/
+
+.modal-backdrop {
+  z-index: -1;
+}
+
+.modal {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.modal-header {
+  color: $wp-blue;
+}
+
+#selectPluginTrigger,
+#selectThemeTrigger {
+  margin: 20px auto 30px;
+}
+
+/*********************
+TABS
+*********************/
+
+a {
+  color: #237ba3;
+}
+
+.nav-pills > li.active > a {
+  background-color: #237ba3;
+}
+
+/*********************
+TOOLTIP
+*********************/
+
+div.tooltip-inner {
+  max-width: 350px;
+}

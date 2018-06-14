@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "./node_modules/.bin/electron ./app"
+  },
+  "devDependencies": {
+    "electron": "^2.0.2",
+    "rimraf": "^2.5.2"
+  }
+}
