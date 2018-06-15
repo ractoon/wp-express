@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "start": "./node_modules/.bin/electron ./app"
+    "start": "./node_modules/.bin/electron ./app",
+    "dev": "./node_modules/.bin/electron ./app --debug"
   },
   "devDependencies": {
     "electron": "^2.0.2",

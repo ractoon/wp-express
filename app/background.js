@@ -3,6 +3,8 @@ const { app, ipcMain, BrowserWindow } = require('electron'),
       devHelper = require('./vendor/electron_boilerplate/dev_helper'),
       windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
 
+const debug = /--debug/.test(process.argv[2]);
+
 var mainWindow,
   icon = process.platform === 'darwin' ? 'icon.icns' : 'icon.ico';
 
@@ -31,7 +33,7 @@ app.on('ready', function() {
 
   mainWindow.loadURL('file://' + __dirname + '/app.html');
  
-  if (process.env.NODE_ENV === 'development') {
+  if (debug) {
     devHelper.setDevMenu();
     mainWindow.openDevTools();
   }
