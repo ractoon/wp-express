@@ -2,6 +2,8 @@
 
 WordPress installer app built on Electron.
 
+![WP Express screenshot](app/assets/images/screenshot.png "WP Express Start Screen")
+
 ## Installation
 
 In the main directory run:
