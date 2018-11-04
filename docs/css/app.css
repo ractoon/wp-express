@@ -1,0 +1,255 @@
+body {
+	padding: 0 0 40px;
+}
+
+/* Splash */
+.splash {
+	background: #36c1fe;
+	background: -moz-linear-gradient(top,  #36c1fe 0%, #237ba3 100%);
+	background: -webkit-linear-gradient(top,  #36c1fe 0%,#237ba3 100%);
+	background: linear-gradient(to bottom,  #36c1fe 0%,#237ba3 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#36c1fe', endColorstr='#237ba3',GradientType=0 );
+	padding: 40px 0;
+}
+
+.splash-video {
+	display: block;
+	margin: 0 auto;
+}
+
+@media screen and (max-width: 960px) {
+	.splash-video-wrap {
+		position:relative;
+		padding-bottom:56.25%;
+		padding-top:30px;
+		height:0;
+		overflow:hidden;
+	}
+
+	.splash-video-wrap iframe, .splash-video-wrap object, .splash-video-wrap embed {
+		position:absolute;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+	}
+}
+
+/* Slider */
+.owl-wrapper {
+	background: #36c1fe;
+	background: -moz-linear-gradient(top,  #36c1fe 0%, #237ba3 100%);
+	background: -webkit-linear-gradient(top,  #36c1fe 0%,#237ba3 100%);
+	background: linear-gradient(to bottom,  #36c1fe 0%,#237ba3 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#36c1fe', endColorstr='#237ba3',GradientType=0 );
+}
+
+.owl-item {
+	color: #fff;
+	text-align: center;
+}
+
+.owl-item h3 {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+	color: #fff;
+	padding-bottom: 0.5em;
+}
+
+.owl-item div {
+	padding: 20px;
+}
+
+@media screen and (min-width: 40em) {
+	.owl-item p {
+		margin-bottom: -1em;
+	}
+
+	.owl-item img {
+		display: block;
+		max-width: 50%;
+		height: auto;
+	}
+}
+
+/* General */
+h1 {
+	margin-top: 0.5em;
+}
+
+hr {
+	margin: 24px auto;
+}
+
+.feature i {
+	color: #333;
+	display: inline-block;
+	font-size: 2em;
+	margin: 0 0 0.25em;
+	padding: 0;
+	text-align: center;
+}
+
+/* Top Nav */
+.top-bar {
+	background: #ffffff;
+	background: -moz-linear-gradient(top,  #ffffff 0%, #efefef 100%);
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#efefef 100%);
+	background: linear-gradient(to bottom,  #ffffff 0%,#efefef 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#efefef',GradientType=0 );
+}
+
+.top-bar ul {
+	background: none;
+}
+
+.top-bar .menu-text {
+	color: #35bdf9;
+	line-height: 50px;
+}
+
+.actions-menu {
+	padding-top: 15px;
+}
+
+.actions-menu .button {
+	color: #fff;
+}
+
+/* Downloads */
+.download-button {
+	margin: 0 0.5em;
+	padding: 15px 30px;
+}
+
+.download-type {
+	display: block;
+	font-size: 1.5em;
+	line-height: 1.25;
+}
+
+.download-version {
+	color: #eee;
+	display: block;
+	font-size: 0.875em;
+	margin: 0.5em 0 0;
+}
+
+/* Opt-in form */
+#mc_embed_signup {
+	background: #eee;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	margin: 0 0 3em;
+	padding: 1.5em 1.5em 1em;
+}
+
+.copyright {
+	margin: 4px 0 0;
+}
+
+/* Icon Fonts */
+@font-face {
+    font-family: 'icomoon';
+    src: url('../fonts/icomoon.eot?b78gtm');
+    src: url('../fonts/icomoon.eot?b78gtm#iefix') format('embedded-opentype'),
+         url('../fonts/icomoon.woff2?b78gtm') format('woff2'),
+         url('../fonts/icomoon.ttf?b78gtm') format('truetype'),
+         url('../fonts/icomoon.woff?b78gtm') format('woff'),
+         url('../fonts/icomoon.svg?b78gtm#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-cog:before {
+    content: "\f013";
+}
+.icon-gear:before {
+    content: "\f013";
+}
+.icon-download:before {
+    content: "\f019";
+}
+.icon-arrow-circle-o-down:before {
+    content: "\f01a";
+}
+.icon-folder:before {
+    content: "\f07b";
+}
+.icon-github-square:before {
+  content: "\f092";
+}
+.icon-github:before {
+  content: "\f09b";
+}
+.icon-exchange:before {
+    content: "\f0ec";
+}
+.icon-cloud-download:before {
+    content: "\f0ed";
+}
+.icon-apple:before {
+    content: "\f179";
+}
+.icon-windows:before {
+    content: "\f17a";
+}
+.icon-wordpress:before {
+    content: "\f19a";
+}
+.icon-language:before {
+    content: "\f1ab";
+}
+.icon-cubes:before {
+    content: "\f1b3";
+}
+.icon-database:before {
+    content: "\f1c0";
+}
+.icon-file-code-o:before {
+    content: "\f1c9";
+}
+.icon-plug:before {
+    content: "\f1e6";
+}
+
+/* Steps */
+.step p:first-of-type {
+	margin-top: 1em;
+}
+
+.step h3 {
+	margin-top: 16px;
+}
+
+.step h3 + p {
+	margin-top: 0;
+}
+
+/* Magnific */
+.mfp-bg {
+	opacity: 0.95;
+}
+
+.img.mfp-img {
+	padding: 0;
+}
+
+.mfp-figure:after {
+  box-shadow: none;
+  background: transparent; 
+}
