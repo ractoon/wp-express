@@ -107,6 +107,11 @@ hr {
 	line-height: 50px;
 }
 
+.top-bar .menu-text img {
+	float: left;
+	margin: 0 5px 0 0;
+}
+
 .actions-menu {
 	padding-top: 15px;
 }
