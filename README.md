@@ -6,17 +6,21 @@ WordPress installer app built on Electron.
 
 ## Installation
 
-In the main directory run:
+Run the following commands to download and install the dependencies for the application:
 
 ```
+git clone https://github.com/ractoon/wp-express.git
+cd wp-express
+npm install
+cd app
 npm install
 ```
 
-Then again in the `app` directory run:
+### Installation Description
 
-```
-npm install
-```
+After cloning, or downloading, the repository go into the directory you just created and run `npm install`. This will set up the Electron dependencies. 
+
+Once the Electron dependencies are installed go into the `app` directory (`wp-express/app`) and run `npm install` once again. This installs the application specific dependencies.
 
 ### Windows
 
@@ -28,7 +32,7 @@ npm install
 
 ## Running the Application
 
-From the main directory run 
+In the main directory (`wp-express` if you followed the installation instructions above) run the following command to start the application:
 
 ```
 npm run start
@@ -36,4 +40,4 @@ npm run start
 
 ## Usage
 
-Step by step instructions can be viewed at [http://wpexpress.io/](http://wpexpress.io/)
+Step by step instructions can be viewed at [https://www.wpexpress.io/](https://www.wpexpress.io/)
