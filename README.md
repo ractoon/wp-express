@@ -40,4 +40,4 @@ npm run start
 
 ## Usage
 
-Step by step instructions can be viewed at [https://www.wpexpress.io/](https://www.wpexpress.io/)
+Step by step instructions can be viewed at [https://ractoon.github.io/wp-express/](https://ractoon.github.io/wp-express/)
