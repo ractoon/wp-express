@@ -5,7 +5,7 @@
     "dev": "./node_modules/.bin/electron ./app --debug"
   },
   "devDependencies": {
-    "electron": "^2.0.2",
+    "electron": "^2.0.8",
     "rimraf": "^2.5.2"
   }
 }
