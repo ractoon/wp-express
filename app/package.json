@@ -16,11 +16,11 @@
   },
   "homepage": "https://github.com/ractoon/wp-express",
   "dependencies": {
-    "bootstrap": "^3.3.5",
+    "bootstrap": "^3.4.1",
     "fs-jetpack": "^0.9.1",
     "glob": "^6.0.1",
     "is-there": "4.1.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "validator": "^4.2.1",
     "vue": "^1.0.10",
     "vue-drag-and-drop": "^2.0.0"
