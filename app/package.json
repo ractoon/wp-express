@@ -21,7 +21,7 @@
     "glob": "^6.0.1",
     "is-there": "4.1.0",
     "jquery": "^3.5.0",
-    "validator": "^4.2.1",
+    "validator": "^13.7.0",
     "vue": "^1.0.10",
     "vue-drag-and-drop": "^2.0.0"
   }
